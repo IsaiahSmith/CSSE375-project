@@ -13,4 +13,4 @@
         android:id="@+id/CreateEventLayout"
         android:orientation="vertical"></LinearLayout>
 </RelativeLayout>
-<!-- From: file:/C:/Users/smithij/Documents/CSSE/375/LetsAndroid/app/src/main/res/layout/activity_create_event.xml -->
+<!-- From: file:/C:/Users/smithij/Documents/CSSE/375/CSSE375-project/app/src/main/res/layout/activity_create_event.xml -->
