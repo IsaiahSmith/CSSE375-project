@@ -1,0 +1,3 @@
+This is the Android project for the Let's App. 
+
+TODO: More info to be added later ...

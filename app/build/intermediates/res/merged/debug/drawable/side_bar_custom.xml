@@ -1,0 +1,9 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+    <gradient
+        android:startColor="#FBB117"
+        android:centerColor="#FFDB58"
+        android:endColor="#F3E5AB"
+        android:type="linear"
+        android:angle="135"/>
+</shape><!-- From: file:/C:/Users/smithij/Documents/CSSE/375/LetsAndroid/app/src/main/res/drawable/side_bar_custom.xml -->
