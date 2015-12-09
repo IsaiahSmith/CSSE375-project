@@ -26,7 +26,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 
 public class CreateEventActivity extends AppCompatActivity {
-    public final static String apiURL = "http://137.112.231.77:8080/LetsAPI/InsertEventServlet";
+    public final static String apiURL = "http://137.112.234.153:8080/LetsAPI/InsertEventServlet";
     LinearLayout mLinearLayout;
     Time startTime;
     Time endTime;

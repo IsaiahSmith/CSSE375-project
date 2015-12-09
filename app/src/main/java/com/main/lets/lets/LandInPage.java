@@ -52,8 +52,14 @@ public class LandInPage extends AppCompatActivity {
     }
 
     public void goToSignIN(){
-        Intent signIntent = new Intent(this,SignInActivity.class);
-        this.startActivity(signIntent);
+        Intent mainPage = new Intent(getApplicationContext(), MainActivity.class);
+        mainPage.putExtra("LOG_IN_USER","ismith2013@yahoo.com");
+        mainPage.putExtra("FROM_LOG_IN","true");
+        startActivity(mainPage);
+        //showProgress(true);
+
+        //Intent signIntent = new Intent(this,SignInActivity.class);
+        //this.startActivity(signIntent);
 
     }
     public void goToRegister(){
