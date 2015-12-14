@@ -18,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -239,8 +241,46 @@ public class MainActivity extends AppCompatActivity
                 (TextView) v.findViewById(R.id.Score),
                 (TextView) v.findViewById(R.id.Friends),
                 (TextView) v.findViewById(R.id.Events)};
-
+        Button addButton = (Button) v.findViewById(R.id.button5);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTags();
+            }
+        });
+        Button searchButton = (Button) v.findViewById(R.id.filter_search_button);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doSearch();
+            }
+        });
     }
+
+    public void doSearch(){
+        View v = getLayoutInflater().inflate(R.layout.fragment_filters,
+                mLinearLayout);
+        TextView tags = (TextView) v.findViewById(R.id.textView);
+        EditText radius = (EditText) v.findViewById(R.id.editText2);
+
+        String searchURL = apiURL + "/AdvancedSearchServlet";
+        searchURL += "?tags="+tags+
+                     "radius="+radius;
+        new CallSearchAPI().execute(searchURL);
+    }
+
+    public void addTags(){
+        View v = getLayoutInflater().inflate(R.layout.fragment_filters,
+                mLinearLayout);
+        EditText tagtoAdd = (EditText) v.findViewById(R.id.editText);
+        TextView tags = (TextView) v.findViewById(R.id.textView);
+        if(tags != null){
+            tags.setText(tags.getText() + " " + tagtoAdd.toString());
+        }else{
+            tags.setText(tagtoAdd.toString());
+        }
+    }
+
     public void viewFriends(){
         View v = getLayoutInflater().inflate(R.layout.fragment_friends,mLinearLayout);
         ListView friendList = (ListView) findViewById(R.id.list_view_friend);
@@ -498,6 +538,102 @@ public class MainActivity extends AppCompatActivity
                     String[] res = {"Public"};
 
                    // events.add(new dummyEvent());
+                    events.add(dum);
+
+
+                }
+
+
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+
+            addFeed();
+
+
+        }
+
+
+
+    }
+    private class CallSearchAPI extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String urlString=params[0]; // URL to call
+            String resultToDisplay;
+            BufferedReader in = null;
+            String answer = "";
+
+            // HTTP Get
+            try {
+
+                URL url = new URL(urlString);
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+                in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+
+            } catch (Exception e ) {
+
+                System.out.println(e.getMessage());
+
+                return e.getMessage();
+
+            }
+
+            try {
+                answer = in.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return answer;
+        }
+
+        protected void onPostExecute(String result) {
+
+            try {
+                String splitter = "@@@@@";
+
+                String[] eventsList = result.split(splitter);
+
+
+                for(String e : eventsList){
+
+                    dummyEvent dum = new dummyEvent();
+                    JSONObject event = new JSONObject(e);
+
+                    dum.setTitle(event.get("title").toString());
+
+
+                    dum.setDescription(event.get("description").toString());
+                    dum.setMaxA(10);
+
+                    dum.setStartTime(new Time(2, 0, 0));
+                    dum.setEndTime(new Time(4, 0, 0));
+
+
+                    JSONObject coor = event.getJSONObject("location");
+                    JSONArray coorPoint = coor.getJSONArray("coordinates");
+                    dum.setCoords(coorPoint.getInt(0), coorPoint.getInt(1));
+
+
+
+                    dum.setDate(new Date(2015, 11, 20));
+
+                    String[] args = {
+
+                            "BSB 109",
+                            "9:45PM - 11:45PM",
+                            "0", "1"};
+
+                    String[] res = {"Public"};
+
+                    // events.add(new dummyEvent());
                     events.add(dum);
 
 
