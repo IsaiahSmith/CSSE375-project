@@ -43,7 +43,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class SignInActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-    public final static String apiURL = "http://137.112.234.153:8080/LetsAPI/LoginServlet";
+    public final static String apiURL = "http://137.112.234.126:8080/CSSE375-projectAPI/LoginServlet";
 
 
     /**

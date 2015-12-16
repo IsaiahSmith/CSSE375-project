@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
     public static final String[] CATOGORIES = {"Sports", "Study", "Relax",
             "Eating", "Party"};
 
-    public final static String apiURL = "http://137.112.234.153:8080/LetsAPI";
+    public final static String apiURL = "http://137.112.234.126:8080/CSSE375-projectAPI";
 
     private String signName;
     private String signGender;
