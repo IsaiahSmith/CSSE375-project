@@ -599,7 +599,6 @@ public class MainActivity extends AppCompatActivity
 
                 String[] eventsList = result.split(splitter);
 
-
                 for(String e : eventsList){
 
                     dummyEvent dum = new dummyEvent();
