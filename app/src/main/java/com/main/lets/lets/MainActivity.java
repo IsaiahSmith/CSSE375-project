@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity
     public void doSearch(){
         View v = getLayoutInflater().inflate(R.layout.fragment_filters,
                 mLinearLayout);
-        TextView tags = (TextView) v.findViewById(R.id.textView);
+        TextView tags = (TextView) v.findViewById(R.id.tagHolder);
         EditText radius = (EditText) v.findViewById(R.id.editText2);
 
         String searchURL = apiURL + "/AdvancedSearchServlet";
@@ -270,14 +270,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void addTags(){
-        View v = getLayoutInflater().inflate(R.layout.fragment_filters,
-                mLinearLayout);
-        EditText tagtoAdd = (EditText) v.findViewById(R.id.editText);
-        TextView tags = (TextView) v.findViewById(R.id.textView);
+        EditText tagToAdd = (EditText) findViewById(R.id.tagEdit);
+        TextView tags = (TextView) findViewById(R.id.tagHolder);
         if(tags != null){
-            tags.setText(tags.getText() + " " + tagtoAdd.toString());
+            tags.setText(tags.getText() + ", " + tagToAdd.getEditableText());
         }else{
-            tags.setText(tagtoAdd.toString());
+            tags.setText(tagToAdd.getEditableText());
         }
     }
 
