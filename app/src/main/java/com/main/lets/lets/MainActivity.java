@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -241,13 +240,6 @@ public class MainActivity extends AppCompatActivity
                 (TextView) v.findViewById(R.id.Score),
                 (TextView) v.findViewById(R.id.Friends),
                 (TextView) v.findViewById(R.id.Events)};
-        Button addButton = (Button) v.findViewById(R.id.button5);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addTags();
-            }
-        });
         Button searchButton = (Button) v.findViewById(R.id.filter_search_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,23 +252,11 @@ public class MainActivity extends AppCompatActivity
     public void doSearch(){
         View v = getLayoutInflater().inflate(R.layout.fragment_filters,
                 mLinearLayout);
-        TextView tags = (TextView) v.findViewById(R.id.tagHolder);
-        EditText radius = (EditText) v.findViewById(R.id.editText2);
+        TextView tags = (TextView) v.findViewById(R.id.tagEdit);
 
         String searchURL = apiURL + "/AdvancedSearchServlet";
-        searchURL += "?tags="+tags+
-                     "radius="+radius;
+        searchURL += "?tags="+tags;
         new CallSearchAPI().execute(searchURL);
-    }
-
-    public void addTags(){
-        EditText tagToAdd = (EditText) findViewById(R.id.tagEdit);
-        TextView tags = (TextView) findViewById(R.id.tagHolder);
-        if(tags != null){
-            tags.setText(tags.getText() + ", " + tagToAdd.getEditableText());
-        }else{
-            tags.setText(tagToAdd.getEditableText());
-        }
     }
 
     public void viewFriends(){

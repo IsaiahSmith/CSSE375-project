@@ -37,6 +37,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import APICalls.CallLoginAPI;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -220,7 +222,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
 
             String urlString = apiURL+"?owner_id="+email+"&password="+password;
 
-            new CallAPI().execute(urlString);
+            new CallLoginAPI(mEmailView.getText().toString(), getApplicationContext(), getBaseContext()).execute(urlString);
 
             // TODO: comment out after finishing testing
 
