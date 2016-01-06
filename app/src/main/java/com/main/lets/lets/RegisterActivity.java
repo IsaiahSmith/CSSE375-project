@@ -27,7 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
     public static final String LOG_IN_USER = "LOG_IN_USER";
     public static final String FROM_REGISTER = "FROM_REGISTER";
     private String userEmailExtra;
-    public final static String apiURL = "http://137.112.234.126:8080/CSSE375-projectAPI/InsertUserServlet";
+    public final static String apiURL = GlobalVars.ipAddr+"/InsertUserServlet";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
