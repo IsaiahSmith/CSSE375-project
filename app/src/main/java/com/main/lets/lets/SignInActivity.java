@@ -222,7 +222,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
 
             String urlString = apiURL+"?owner_id="+email+"&password="+password;
 
-            new CallLoginAPI(mEmailView.getText().toString(), getApplicationContext(), getBaseContext()).execute(urlString);
+            new CallLoginAPI(mEmailView.getText().toString(),this).execute(urlString);
 
             // TODO: comment out after finishing testing
 
