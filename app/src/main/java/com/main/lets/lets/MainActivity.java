@@ -140,9 +140,7 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(mLinearLayout, "Event hidden", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 break;
-
         }
-
     }
 
     @Override
