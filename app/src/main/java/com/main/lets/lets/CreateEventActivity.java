@@ -133,22 +133,8 @@ public class CreateEventActivity extends AppCompatActivity {
                 .findViewById(R.id.CatText);
         eV.setAdapter(adapter);
 
-        final EditText[] et = { (EditText) v.findViewById(R.id.TitleText),
-                (EditText) v.findViewById(R.id.CatText),
-                (EditText) v.findViewById(R.id.MinText),
-                (EditText) v.findViewById(R.id.MaxText),
-                (EditText) v.findViewById(R.id.DescText)
-
-        };
-
-        final CheckBox[] cb = { (CheckBox) v.findViewById(R.id.R1),
-                (CheckBox) v.findViewById(R.id.R2),
-                (CheckBox) v.findViewById(R.id.R3),
-                (CheckBox) v.findViewById(R.id.R4),
-                (CheckBox) v.findViewById(R.id.R5),
-                (CheckBox) v.findViewById(R.id.R6)
-
-        };
+        final EditText[] et = getEditTextArray(v);
+        final CheckBox[] cb = getCheckBoxArray(v);
 
         Button b = (Button) v.findViewById(R.id.cButton);
 
@@ -184,23 +170,16 @@ public class CreateEventActivity extends AppCompatActivity {
 
                 String[] r = { "18+" };
 
-                dummyEvent nEvent = new dummyEvent();
-                nEvent.setTitle(et[0].getText().toString());
-
-                nEvent.setMinA(Integer.parseInt(et[2].getText().toString()));
-                nEvent.setMaxA(Integer.parseInt(et[3].getText().toString()));
-                nEvent.setDescription(et[4].getText().toString());
-                nEvent.setStartTime(startTime);
-                nEvent.setEndTime(endTime);
-                nEvent.setDate(date);
+                dummyEvent nEvent = populateEvent(new dummyEvent(), et);
                 MainActivity.events.add(nEvent);
-                //done: here gets all the require info to create event, need to call api
                 String title = nEvent.getTitle();
                 String startTime = nEvent.getStartTimeString();
                 String endTime = nEvent.getEndTimeString();
                 String desc = nEvent.getDescription();
 
                 String tags = nEvent.getTags();
+
+
                 String urlString = apiURL+
                         "?owner_id="+currentUser+
                         "&loc="+""+
@@ -219,6 +198,38 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public dummyEvent populateEvent(dummyEvent event, EditText[] et) {
+        event.setTitle(et[0].getText().toString());
+
+        event.setMinA(Integer.parseInt(et[2].getText().toString()));
+        event.setMaxA(Integer.parseInt(et[3].getText().toString()));
+        event.setDescription(et[4].getText().toString());
+        event.setStartTime(startTime);
+        event.setEndTime(endTime);
+        event.setDate(date);
+        return event;
+    }
+
+    private EditText[] getEditTextArray(View v){
+        return new EditText[]{(EditText) v.findViewById(R.id.TitleText),
+                (EditText) v.findViewById(R.id.CatText),
+                (EditText) v.findViewById(R.id.MinText),
+                (EditText) v.findViewById(R.id.MaxText),
+                (EditText) v.findViewById(R.id.DescText)
+        };
+    }
+
+    private CheckBox[] getCheckBoxArray(View v) {
+        return new CheckBox[]{ (CheckBox) v.findViewById(R.id.R1),
+                (CheckBox) v.findViewById(R.id.R2),
+                (CheckBox) v.findViewById(R.id.R3),
+                (CheckBox) v.findViewById(R.id.R4),
+                (CheckBox) v.findViewById(R.id.R5),
+                (CheckBox) v.findViewById(R.id.R6)
+
+        };
     }
 
     private class CallAPI extends AsyncTask<String, String, String> {
