@@ -172,35 +172,14 @@ public class CreateEventActivity extends AppCompatActivity {
 
                 dummyEvent nEvent = populateEvent(new dummyEvent(), et);
                 MainActivity.events.add(nEvent);
-                String title = nEvent.getTitle();
-                String startTime = nEvent.getStartTimeString();
-                String endTime = nEvent.getEndTimeString();
-                String desc = nEvent.getDescription();
-
-                String tags = nEvent.getTags();
-
-
-                String urlString = apiURL+
-                        "?owner_id="+currentUser+
-                        "&loc="+""+
-                        "&title="+title+
-                        "&startTime="+ "" +
-                        "&endTime="+ "" +
-                        "&street="+ "345 Sycamore St." +
-                        "&city="+ "Terre Haute"+
-                        "&state="+ "IN"+
-                        "&zipCode="+ "47803"+
-                        "&description="+ desc +
-                        "&tags=" + tags;
-                String parsedURL = urlString.replaceAll(" ", "%20");
-                new CallAPI().execute(parsedURL);
+                new CallAPI().execute(createEventURLString(nEvent));
                 finish();
             }
         });
 
     }
 
-    public dummyEvent populateEvent(dummyEvent event, EditText[] et) {
+    private dummyEvent populateEvent(dummyEvent event, EditText[] et) {
         event.setTitle(et[0].getText().toString());
 
         event.setMinA(Integer.parseInt(et[2].getText().toString()));
@@ -210,6 +189,26 @@ public class CreateEventActivity extends AppCompatActivity {
         event.setEndTime(endTime);
         event.setDate(date);
         return event;
+    }
+
+    private String createEventURLString(dummyEvent e) {
+        String url = apiURL+
+        "?owner_id="+currentUser+
+        "&loc="+""+
+        "&title="+e.getTitle()+
+        "&startTime="+ "" +
+        "&endTime="+ "" +
+        "&street="+ "345 Sycamore St." +
+        "&city="+ "Terre Haute"+
+        "&state="+ "IN"+
+        "&zipCode="+ "47803"+
+        "&description="+ e.getDescription() +
+        "&tags=" + e.getTags();
+        return cleanURLString(url);
+    }
+
+    private String cleanURLString(String s) {
+        return s.replaceAll(" ", "%20");
     }
 
     private EditText[] getEditTextArray(View v){
