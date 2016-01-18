@@ -1,8 +1,6 @@
 package com.main.lets.lets;
 
 import android.annotation.TargetApi;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,11 +14,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import APICalls.CallRegisterAPI;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -124,78 +118,12 @@ public class RegisterActivity extends AppCompatActivity {
                     "&dob="+userDOB;
 
             String parsedURL = urlString.replaceAll(" ", "%20");
-            new CallAPI().execute(parsedURL);
+            new CallRegisterAPI(this).execute(parsedURL);
         }else{
             Toast.makeText(
                     getBaseContext(),
                     "Your passwords do not match!",
                     Toast.LENGTH_LONG).show();
-        }
-    }
-
-
-    private class CallAPI extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            String urlString=params[0]; // URL to call
-            String resultToDisplay;
-            BufferedReader in = null;
-            String answer = "";
-
-            // HTTP Get
-            try {
-
-                URL url = new URL(urlString);
-
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-                in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
-            } catch (Exception e ) {
-
-                System.out.println(e.getMessage());
-
-                return e.getMessage();
-
-            }
-
-            try {
-                answer = in.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return answer;
-        }
-
-        protected void onPostExecute(String result) {
-            if(result.equals("false")){
-                //do the stuff that says you failed:(
-                Toast.makeText(
-                        getBaseContext(),
-                        "You failed to register, try agian",
-                        Toast.LENGTH_LONG).show();
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
-            }else if(result.equals("true")){
-                Toast.makeText(
-                        getBaseContext(),
-                        "Thanks for joining Let's!",
-                        Toast.LENGTH_LONG).show();
-                Intent mainPage = new Intent(getApplicationContext(), SignInActivity.class);
-//                mainPage.putExtra(LOG_IN_USER,userEmailExtra.toString());
-               // mainPage.putExtra(FROM_REGISTER, "true");
-                startActivity(mainPage);
-            }else{
-                Toast.makeText(
-                        getBaseContext(),
-                        result,
-                        Toast.LENGTH_LONG).show();
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
-            }
         }
     }
 }

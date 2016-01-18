@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -24,18 +23,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.sql.Date;
-import java.sql.Time;
 import java.util.LinkedList;
+
+import APICalls.CallEventAPI;
+import APICalls.CallGetUserAPI;
+import APICalls.CallSearchAPI;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -92,10 +84,10 @@ public class MainActivity extends AppCompatActivity
         //TODO: got the current user. Call API to load specific user info
 
         String userInfoURL = apiURL + "/GetUserServlet?_id=" + currentUser;
-        new CallAPI().execute(userInfoURL);
+        new CallGetUserAPI(this, signName, signAddress, signGender).execute(userInfoURL);
 
         String getEventURL = apiURL + "/GetAllEventsServlet";
-        new CallEventAPI().execute(getEventURL);
+        new CallEventAPI(this).execute(getEventURL);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -254,7 +246,7 @@ public class MainActivity extends AppCompatActivity
 
         String searchURL = apiURL + "/AdvancedSearchServlet";
         searchURL += "?tags="+tags;
-        new CallSearchAPI().execute(searchURL);
+        new CallSearchAPI(this).execute(searchURL);
     }
 
     public void viewFriends(){
@@ -376,259 +368,6 @@ public class MainActivity extends AppCompatActivity
     //Not in scope of class, just dummy. Will be implemented after class is over.
     public void addProfileSettings(){
         View v = getLayoutInflater().inflate(R.layout.fragment_settings, mLinearLayout);
-
-    }
-
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    private class CallAPI extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            String urlString=params[0]; // URL to call
-            String resultToDisplay;
-            BufferedReader in = null;
-            String answer = "";
-
-            // HTTP Get
-            try {
-
-                URL url = new URL(urlString);
-
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-                in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
-            } catch (Exception e ) {
-
-                System.out.println(e.getMessage());
-
-                return e.getMessage();
-
-            }
-
-            try {
-                answer = in.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return answer;
-        }
-
-        protected void onPostExecute(String result) {
-            try {
-                JSONObject person = new JSONObject(result);
-                JSONObject nameObj = person.getJSONObject("profile");
-                signName= nameObj.get("name").toString();
-                JSONObject addObj = nameObj.getJSONObject("address");
-                signAddress =addObj.get("city").toString() + ", " + addObj.get("state").toString();
-
-                signGender = nameObj.get("gender").toString();
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-
-
-
-    }
-
-
-    private class CallEventAPI extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            String urlString=params[0]; // URL to call
-            String resultToDisplay;
-            BufferedReader in = null;
-            String answer = "";
-
-            // HTTP Get
-            try {
-
-                URL url = new URL(urlString);
-
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-                in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
-            } catch (Exception e ) {
-
-                System.out.println(e.getMessage());
-
-                return e.getMessage();
-
-            }
-
-            try {
-                answer = in.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return answer;
-        }
-
-        protected void onPostExecute(String result) {
-
-            try {
-                String splitter = "@@@@@";
-
-                String[] eventsList = result.split(splitter);
-
-
-                for(String e : eventsList){
-
-                    dummyEvent dum = new dummyEvent();
-                    JSONObject event = new JSONObject(e);
-
-                    dum.setTitle(event.get("title").toString());
-
-
-                    dum.setDescription(event.get("description").toString());
-                    dum.setMaxA(10);
-
-                    dum.setStartTime(new Time(2, 0, 0));
-                    dum.setEndTime(new Time(4, 0, 0));
-
-
-                    JSONObject coor = event.getJSONObject("location");
-                    JSONArray coorPoint = coor.getJSONArray("coordinates");
-                    dum.setCoords(coorPoint.getInt(0), coorPoint.getInt(1));
-
-
-
-                    dum.setDate(new Date(2015, 11, 20));
-
-                    String[] args = {
-
-                            "BSB 109",
-                            "9:45PM - 11:45PM",
-                            "0", "1"};
-
-                    String[] res = {"Public"};
-
-                   // events.add(new dummyEvent());
-                    events.add(dum);
-
-
-                }
-
-
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-
-            addFeed();
-
-
-        }
-
-
-
-    }
-    private class CallSearchAPI extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            String urlString=params[0]; // URL to call
-            String resultToDisplay;
-            BufferedReader in = null;
-            String answer = "";
-
-            // HTTP Get
-            try {
-
-                URL url = new URL(urlString);
-
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-                in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
-            } catch (Exception e ) {
-
-                System.out.println(e.getMessage());
-
-                return e.getMessage();
-
-            }
-
-            try {
-                answer = in.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return answer;
-        }
-
-        protected void onPostExecute(String result) {
-
-            try {
-                String splitter = "@@@@@";
-
-                String[] eventsList = result.split(splitter);
-
-                for(String e : eventsList){
-
-                    dummyEvent dum = new dummyEvent();
-                    JSONObject event = new JSONObject(e);
-
-                    dum.setTitle(event.get("title").toString());
-
-
-                    dum.setDescription(event.get("description").toString());
-                    dum.setMaxA(10);
-
-                    dum.setStartTime(new Time(2, 0, 0));
-                    dum.setEndTime(new Time(4, 0, 0));
-
-
-                    JSONObject coor = event.getJSONObject("location");
-                    JSONArray coorPoint = coor.getJSONArray("coordinates");
-                    dum.setCoords(coorPoint.getInt(0), coorPoint.getInt(1));
-
-
-
-                    dum.setDate(new Date(2015, 11, 20));
-
-                    String[] args = {
-
-                            "BSB 109",
-                            "9:45PM - 11:45PM",
-                            "0", "1"};
-
-                    String[] res = {"Public"};
-
-                    // events.add(new dummyEvent());
-                    events.add(dum);
-
-
-                }
-
-
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-
-            addFeed();
-
-
-        }
-
-
 
     }
 }

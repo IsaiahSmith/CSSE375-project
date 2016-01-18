@@ -18,8 +18,8 @@ public class CallGetUserAPI extends CallAPI {
         this.signName = name;
         this.signAddress = address;
         this.signGender = Gender;
-
     }
+
     protected void onPostExecute(String result) {
         try {
             JSONObject person = new JSONObject(result);

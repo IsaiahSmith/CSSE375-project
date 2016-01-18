@@ -1,7 +1,6 @@
 package com.main.lets.lets;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,14 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+
+import APICalls.CallCreateEventAPI;
 
 public class CreateEventActivity extends AppCompatActivity {
     public final static String apiURL = GlobalVars.ipAddr+"/InsertEventServlet";
@@ -172,11 +168,15 @@ public class CreateEventActivity extends AppCompatActivity {
 
                 dummyEvent nEvent = populateEvent(new dummyEvent(), et);
                 MainActivity.events.add(nEvent);
-                new CallAPI().execute(createEventURLString(nEvent));
-                finish();
+                attemptCreation(nEvent);
             }
         });
 
+    }
+
+    public void attemptCreation(dummyEvent nEvent){
+        new CallCreateEventAPI(this).execute(createEventURLString(nEvent));
+        finish();
     }
 
     private dummyEvent populateEvent(dummyEvent event, EditText[] et) {
@@ -230,51 +230,5 @@ public class CreateEventActivity extends AppCompatActivity {
 
         };
     }
-
-    private class CallAPI extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            String urlString=params[0]; // URL to call
-            String resultToDisplay;
-            BufferedReader in = null;
-            String answer = "";
-
-            // HTTP Get
-            try {
-
-                URL url = new URL(urlString);
-
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-                in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
-            } catch (Exception e ) {
-
-                System.out.println(e.getMessage());
-
-                return e.getMessage();
-
-            }
-
-            try {
-                answer = in.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return  answer;
-        }
-
-        protected void onPostExecute(String result) {
-            if(result.equals("true")){
-                //do the stuff saying you have registered!
-                Toast.makeText(getBaseContext(), "Your event was created!", Toast.LENGTH_LONG).show();
-            }else{
-                Toast.makeText(getBaseContext(), "Your event was not created due to an error! Please try again.", Toast.LENGTH_LONG).show();
-            }
-        }
-
-    }
-
 }
 

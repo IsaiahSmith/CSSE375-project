@@ -21,7 +21,6 @@ public class CallCreateEventAPI extends CallAPI {
 
     protected void onPostExecute(String result) {
         if(result.equals("true")){
-            //do the stuff saying you have registered!
             Toast.makeText(this.baseContext, "Your event was created!", Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(this.baseContext, "Your event was not created due to an error! Please try again.", Toast.LENGTH_LONG).show();
