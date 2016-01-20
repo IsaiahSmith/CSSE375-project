@@ -16,7 +16,6 @@ import android.widget.Space;
 import android.widget.TextView;
 
 public class EventActivity extends AppCompatActivity {
-    private CharSequence mTitle;
     private LinearLayout mLinearLayout;
 
     @Override
@@ -110,7 +109,5 @@ public class EventActivity extends AppCompatActivity {
                 R.drawable.ic_launcher);
 
         iv.setImageBitmap(bm);
-
-
     }
 }

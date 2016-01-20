@@ -33,14 +33,11 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static int STATE = 0;
-    public static boolean isLoggedIn = false;
     public static int ACTIVE_EVENT = -1;
     public static LinkedList<dummyEvent> events;
     public FloatingActionButton fab;
     public static final String LOG_IN_USER = "LOG_IN_USER";
     public static String currentUser;
-    public static final String[] CATOGORIES = {"Sports", "Study", "Relax",
-            "Eating", "Party"};
 
     public final static String apiURL = GlobalVars.ipAddr;
 
@@ -63,25 +60,9 @@ public class MainActivity extends AppCompatActivity
         events = new LinkedList<>();
         Intent data = this.getIntent();
         String logInUser = "";
-
-
-//        String fromReg = data.getStringExtra(RegisterActivity.FROM_REGISTER);
-//        String fromLog = data.getStringExtra(SignInActivity.FROM_LOG_IN);
         logInUser = data.getStringExtra(SignInActivity.LOG_IN_USER);
 
-//
-//        if(fromLog.equals("true")) {
-//
-//
-//
-//        }else if (fromReg.equals("true")){
-//            logInUser = data.getStringExtra(RegisterActivity.LOG_IN_USER);
-//
-//
-//        }
-
         currentUser = logInUser;
-        //TODO: got the current user. Call API to load specific user info
 
         String userInfoURL = apiURL + "/GetUserServlet?_id=" + currentUser;
         new CallGetUserAPI(this, signName, signAddress, signGender).execute(userInfoURL);
@@ -100,6 +81,7 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -183,37 +165,20 @@ public class MainActivity extends AppCompatActivity
             STATE = 1;
             mLinearLayout.removeAllViews();
             addProfile();
-           /* if (isLoggedIn) {
-                addProfile();
-
-            } else {
-                Intent myIntent = new Intent(this, RegisterActivity.class);
-                startActivity(myIntent);
-                isLoggedIn = true;
-
-            }
-*/
         } else if (id == R.id.nav_filters) {
             mLinearLayout.removeAllViews();
             fab.setVisibility(View.GONE);
             addFilters();
 
-        } else if (id == R.id.nav_settings) {
-            mLinearLayout.removeAllViews();
-            fab.setVisibility(View.GONE);
-            addProfileSettings();
-
         } else if(id == R.id.nav_friends){
             mLinearLayout.removeAllViews();
             fab.setVisibility(View.GONE);
             viewFriends();
-
         }
         else if (id == R.id.nav_send) {
             mLinearLayout.removeAllViews();
             Intent myIntent = new Intent(this, MapsActivity.class);
             startActivity(myIntent);
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -309,7 +274,6 @@ public class MainActivity extends AppCompatActivity
     public void openEvent() {
         Intent myIntent = new Intent(this, EventActivity.class);
         startActivity(myIntent);
-
     }
 
     public void openCreateEvent() {
@@ -360,14 +324,6 @@ public class MainActivity extends AppCompatActivity
 
         bm = Bitmap.createScaledBitmap(bm, 400, 400, true);
         iv.setImageBitmap(bm);
-
-    }
-
-
-    //Add settings page here
-    //Not in scope of class, just dummy. Will be implemented after class is over.
-    public void addProfileSettings(){
-        View v = getLayoutInflater().inflate(R.layout.fragment_settings, mLinearLayout);
 
     }
 }

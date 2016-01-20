@@ -30,6 +30,8 @@ public class CreateEventActivity extends AppCompatActivity {
     TimePicker tp;
     DatePicker dp;
     private static String currentUser;
+    public static final String[] CATEGORIES = {"Sports", "Study", "Relax",
+            "Eating", "Party"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +125,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 mLinearLayout);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, MainActivity.CATOGORIES);
+                android.R.layout.simple_dropdown_item_1line, this.CATEGORIES);
 
         AutoCompleteTextView eV = (AutoCompleteTextView) v
                 .findViewById(R.id.CatText);

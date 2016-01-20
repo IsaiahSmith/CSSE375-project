@@ -1,9 +1,5 @@
 package com.main.lets.lets;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import java.sql.Date;
 import java.sql.Time;
 
@@ -18,10 +14,8 @@ public class dummyEvent implements Eventable {
     Date date = new Date(0);
     boolean isAttending = false;
     double[] coords;
-    int category = -1;
     int minA = 0;
     int maxA = 0;
-    int attending = 0;
     private String tags;
 
     public dummyEvent() {
@@ -47,19 +41,6 @@ public class dummyEvent implements Eventable {
         this.maxA = Integer.parseInt(args[5]);
         this.coords = new double[]{39.4840838, -87.3211234};
 
-    }
-
-    @Deprecated
-    public dummyEvent(String[] args, String[] restrictions) {
-        this.args = args;
-        this.restrictions = restrictions;
-
-    }
-
-    @Override
-    public String[] getArgs() {
-
-        return this.args;
     }
 
     @Override
@@ -117,11 +98,6 @@ public class dummyEvent implements Eventable {
     }
 
     @Override
-    public Time getStartTime() {
-        return this.startTime;
-    }
-
-    @Override
     public void setEndTime(Time t) {
         this.endTime = t;
 
@@ -134,21 +110,9 @@ public class dummyEvent implements Eventable {
     }
 
     @Override
-    public Time getEndTime() {
-
-        return this.endTime;
-    }
-
-    @Override
     public void setMinA(int i) {
         this.minA = i;
 
-    }
-
-    @Override
-    public int getMinA() {
-
-        return this.minA;
     }
 
     @Override
@@ -161,11 +125,6 @@ public class dummyEvent implements Eventable {
     public int getMaxA() {
 
         return this.maxA;
-    }
-
-    @Override
-    public void setTags(String i) {
-        this.tags = i;
     }
 
     @Override
@@ -187,12 +146,6 @@ public class dummyEvent implements Eventable {
     }
 
     @Override
-    public Date getDate() {
-
-        return this.date;
-    }
-
-    @Override
     public void setCoords(double x, double y) {
         this.coords = new double[]{x, y};
 
@@ -203,30 +156,4 @@ public class dummyEvent implements Eventable {
 
         return this.coords;
     }
-
-
-    public static Bitmap categoryToPic(int i, Activity a){
-        Bitmap bm;
-        switch (i) {
-            case 0:
-                bm = BitmapFactory.decodeResource(a.getResources(),
-                        R.mipmap.party);
-
-                return bm;
-            case 1:
-                bm = BitmapFactory.decodeResource(a.getResources(),
-                        R.mipmap.eating);
-
-                return bm;
-            case 2:
-                bm = BitmapFactory.decodeResource(a.getResources(),
-                        R.mipmap.study);
-
-                return bm;
-
-        }
-
-        return null;
-    }
-
 }

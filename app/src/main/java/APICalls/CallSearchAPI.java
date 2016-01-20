@@ -1,5 +1,8 @@
 package APICalls;
 
+import android.app.Activity;
+
+import com.main.lets.lets.MainActivity;
 import com.main.lets.lets.dummyEvent;
 
 import org.json.JSONArray;
@@ -8,12 +11,6 @@ import org.json.JSONObject;
 
 import java.sql.Date;
 import java.sql.Time;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.widget.Toast;
-
-import com.main.lets.lets.MainActivity;
 
 
 
@@ -54,32 +51,11 @@ public class CallSearchAPI extends CallAPI {
 
 
                 dum.setDate(new Date(2015, 11, 20));
-
-                String[] args = {
-
-                        "BSB 109",
-                        "9:45PM - 11:45PM",
-                        "0", "1"};
-
-                String[] res = {"Public"};
-
-                // events.add(new dummyEvent());
-               MainActivity. events.add(dum);
-
-
+                MainActivity. events.add(dum);
             }
-
-
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        // Make addFeed() static
-        //MainActivity.addFeed();
-
-
     }
 
 }

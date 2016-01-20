@@ -69,8 +69,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void attempRegister(){
 
         EditText editEmail = (EditText) findViewById(R.id.email);

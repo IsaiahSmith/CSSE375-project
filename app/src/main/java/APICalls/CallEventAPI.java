@@ -27,7 +27,6 @@ public class CallEventAPI extends CallAPI {
 
             String[] eventsList = result.split(splitter);
 
-
             for(String e : eventsList){
 
                 dummyEvent dum = new dummyEvent();
@@ -35,31 +34,17 @@ public class CallEventAPI extends CallAPI {
 
                 dum.setTitle(event.get("title").toString());
 
-
                 dum.setDescription(event.get("description").toString());
                 dum.setMaxA(10);
 
                 dum.setStartTime(new Time(2, 0, 0));
                 dum.setEndTime(new Time(4, 0, 0));
 
-
                 JSONObject coor = event.getJSONObject("location");
                 JSONArray coorPoint = coor.getJSONArray("coordinates");
                 dum.setCoords(coorPoint.getInt(0), coorPoint.getInt(1));
 
-
-
                 dum.setDate(new Date(2015, 11, 20));
-
-                String[] args = {
-
-                        "BSB 109",
-                        "9:45PM - 11:45PM",
-                        "0", "1"};
-
-                String[] res = {"Public"};
-
-                // events.add(new dummyEvent());
                 MainActivity.events.add(dum);
 
 
@@ -71,10 +56,5 @@ public class CallEventAPI extends CallAPI {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        // Make Add Field static
-        //  MakeActivity.addFeed();
-
-
     }
 }
