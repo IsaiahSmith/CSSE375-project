@@ -26,12 +26,15 @@ import android.widget.TextView;
 import java.util.LinkedList;
 
 import APICalls.CallEventAPI;
+import APICalls.CallFollowAPI;
+import APICalls.CallGetFollowingAPI;
 import APICalls.CallGetUserAPI;
 import APICalls.CallSearchAPI;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private StateChange stateChanger;
     public static int STATE = 0;
     public static int ACTIVE_EVENT = -1;
     public static LinkedList<dummyEvent> events;
@@ -101,20 +104,9 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         mLinearLayout.removeAllViews();
-
-        switch (STATE){
-            case 0:
-                addFeed();
-                break;
-            case 1:
-                addProfile();
-                break;
-            case 2:
-                addFeed();
-                Snackbar.make(mLinearLayout, "Event hidden", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                break;
-        }
+        
+        stateChanger = new StateChange(this);
+        stateChanger.changeState(STATE, mLinearLayout);
     }
 
     @Override
@@ -173,7 +165,7 @@ public class MainActivity extends AppCompatActivity
         } else if(id == R.id.nav_friends){
             mLinearLayout.removeAllViews();
             fab.setVisibility(View.GONE);
-            viewFriends();
+            viewFollowing();
         }
         else if (id == R.id.nav_send) {
             mLinearLayout.removeAllViews();
@@ -187,7 +179,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void addFilters() {
-        View v = getLayoutInflater().inflate(R.layout.fragment_filters,
+        View v = getLayoutInflater().inflate(R.layout.fragment_search,
                 mLinearLayout);
 
         TextView[] tv = {(TextView) v.findViewById(R.id.nameView),
@@ -205,23 +197,26 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void doSearch(){
-        View v = getLayoutInflater().inflate(R.layout.fragment_filters,
+        View v = getLayoutInflater().inflate(R.layout.fragment_search,
                 mLinearLayout);
         TextView tags = (TextView) v.findViewById(R.id.tagEdit);
 
         String searchURL = apiURL + "/AdvancedSearchServlet";
         searchURL += "?tags="+tags;
-        new CallSearchAPI(this).execute(searchURL);
+        new CallSearchAPI(this, v).execute(searchURL);
     }
 
-    public void viewFriends(){
+    public void viewFollowing(){
         View v = getLayoutInflater().inflate(R.layout.fragment_friends,mLinearLayout);
         ListView friendList = (ListView) findViewById(R.id.list_view_friend);
-        String[] dummyFriends = new String[] {"Runzi", "John","Coco","Aaron","Isaiah","Runzi", "John","Coco","Aaron","Isaiah","Runzi", "John","Coco","Aaron","Isaiah"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,dummyFriends);
-        friendList.setAdapter(adapter);
 
+        String userURL = apiURL + "/GetUserServlet?_id=" + currentUser;
+        CallGetFollowingAPI caller = new CallGetFollowingAPI();
+        caller.execute(userURL);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, caller.getFollowing());
+        friendList.setAdapter(adapter);
     }
+
     public void addFeed() {
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
@@ -296,6 +291,12 @@ public class MainActivity extends AppCompatActivity
                 (TextView) v.findViewById(R.id.Score),
                 (TextView) v.findViewById(R.id.Friends),
                 (TextView) v.findViewById(R.id.Events)};
+        v.findViewById(R.id.followButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attemptFollow(v.findViewById(R.id.followEdit));
+            }
+        });
 
         ImageView iv = (ImageView) v.findViewById(R.id.imageView1);
 
@@ -312,8 +313,6 @@ public class MainActivity extends AppCompatActivity
         tv[0].setText(signName);
         tv[1].setText(signGender);
         tv[2].setText(signAddress);
-        tv[3].setText("(81) Events");
-        tv[4].setText("Score: (69)");
 
         // Put this on Right Side of Screen
 
@@ -324,6 +323,10 @@ public class MainActivity extends AppCompatActivity
 
         bm = Bitmap.createScaledBitmap(bm, 400, 400, true);
         iv.setImageBitmap(bm);
+    }
 
+    private void attemptFollow(View followEdit) {
+        String userFollowURL = apiURL + "/FollowServlet?owner_id=" + currentUser + "&following_id="+ followEdit.toString();
+        new CallFollowAPI(this).execute(userFollowURL);
     }
 }
