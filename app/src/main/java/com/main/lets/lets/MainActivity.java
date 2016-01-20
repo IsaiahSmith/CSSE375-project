@@ -92,19 +92,73 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        this.addMenuItemClick(drawer);
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         mLinearLayout = (LinearLayout) findViewById(R.id.MainLayout);
+    }
+
+    private void addMenuItemClick(DrawerLayout drawer) {
+        drawer.findViewById(R.id.nav_feed).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                STATE = 0;
+                mLinearLayout.removeAllViews();
+                fab.setVisibility(View.VISIBLE);
+                addFeed();
+            }
+        });
+
+        drawer.findViewById(R.id.nav_profile).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                STATE = 1;
+                mLinearLayout.removeAllViews();
+                addProfile();
+            }
+        });
+
+        drawer.findViewById(R.id.nav_search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLinearLayout.removeAllViews();
+                fab.setVisibility(View.GONE);
+                addFilters();
+            }
+        });
+
+        drawer.findViewById(R.id.nav_friends).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLinearLayout.removeAllViews();
+                fab.setVisibility(View.GONE);
+                viewFollowing();
+            }
+        });
+
+        drawer.findViewById(R.id.nav_send).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLinearLayout.removeAllViews();
+                showMap();
+            }
+        });
 
 
+    }
+
+    private void showMap() {
+        Intent myIntent = new Intent(this, MapsActivity.class);
+        startActivity(myIntent);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mLinearLayout.removeAllViews();
-        
+
         stateChanger = new StateChange(this);
         stateChanger.changeState(STATE, mLinearLayout);
     }
@@ -145,34 +199,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_feed) {
-            STATE = 0;
-            mLinearLayout.removeAllViews();
-            fab.setVisibility(View.VISIBLE);
-            addFeed();
-
-        } else if (id == R.id.nav_profile) {
-            STATE = 1;
-            mLinearLayout.removeAllViews();
-            addProfile();
-        } else if (id == R.id.nav_filters) {
-            mLinearLayout.removeAllViews();
-            fab.setVisibility(View.GONE);
-            addFilters();
-
-        } else if(id == R.id.nav_friends){
-            mLinearLayout.removeAllViews();
-            fab.setVisibility(View.GONE);
-            viewFollowing();
-        }
-        else if (id == R.id.nav_send) {
-            mLinearLayout.removeAllViews();
-            Intent myIntent = new Intent(this, MapsActivity.class);
-            startActivity(myIntent);
-        }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
