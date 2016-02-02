@@ -24,7 +24,7 @@ import APICalls.CallLoginAPI;
  */
 public class SignInActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
     public final static String apiURL = GlobalVars.ipAddr+"/LoginServlet";
-
+    private static String TAG = SignInActivity.class.getSimpleName();
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;

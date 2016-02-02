@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -42,12 +43,13 @@ public class MainActivity extends AppCompatActivity
     public static final String LOG_IN_USER = "LOG_IN_USER";
     public static String currentUser;
 
+    private View profView;
+
     public final static String apiURL = GlobalVars.ipAddr;
 
     private String signName;
     private String signGender;
     private String signAddress;
-
 
 
     /**
@@ -61,7 +63,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         events = new LinkedList<>();
+
         Intent data = this.getIntent();
+
         String logInUser = "";
         logInUser = data.getStringExtra(SignInActivity.LOG_IN_USER);
 
@@ -85,73 +89,16 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        this.addMenuItemClick(drawer);
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         mLinearLayout = (LinearLayout) findViewById(R.id.MainLayout);
-    }
-
-    private void addMenuItemClick(DrawerLayout drawer) {
-        drawer.findViewById(R.id.nav_feed).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                STATE = 0;
-                mLinearLayout.removeAllViews();
-                fab.setVisibility(View.VISIBLE);
-                addFeed();
-            }
-        });
-
-        drawer.findViewById(R.id.nav_profile).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                STATE = 1;
-                mLinearLayout.removeAllViews();
-                addProfile();
-            }
-        });
-
-        drawer.findViewById(R.id.nav_search).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLinearLayout.removeAllViews();
-                fab.setVisibility(View.GONE);
-                addFilters();
-            }
-        });
-
-        drawer.findViewById(R.id.nav_friends).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLinearLayout.removeAllViews();
-                fab.setVisibility(View.GONE);
-                viewFollowing();
-            }
-        });
-
-        drawer.findViewById(R.id.nav_send).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLinearLayout.removeAllViews();
-                showMap();
-            }
-        });
-
-
-    }
-
-    private void showMap() {
-        Intent myIntent = new Intent(this, MapsActivity.class);
-        startActivity(myIntent);
     }
 
     @Override
@@ -199,6 +146,35 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_feed) {
+            STATE = 0;
+            mLinearLayout.removeAllViews();
+            fab.setVisibility(View.VISIBLE);
+            addFeed();
+
+        } else if (id == R.id.nav_profile) {
+            STATE = 1;
+            mLinearLayout.removeAllViews();
+            addProfile();
+        }
+        else if (id == R.id.nav_search) {
+            mLinearLayout.removeAllViews();
+            fab.setVisibility(View.GONE);
+            addFilters();
+        }
+        else if(id == R.id.nav_friends){
+            mLinearLayout.removeAllViews();
+            fab.setVisibility(View.GONE);
+            viewFollowing();
+        }
+        else if (id == R.id.nav_send) {
+            mLinearLayout.removeAllViews();
+            Intent myIntent = new Intent(this, MapsActivity.class);
+            startActivity(myIntent);
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -237,8 +213,9 @@ public class MainActivity extends AppCompatActivity
         ListView friendList = (ListView) findViewById(R.id.list_view_friend);
 
         String userURL = apiURL + "/GetUserServlet?_id=" + currentUser;
-        CallGetFollowingAPI caller = new CallGetFollowingAPI();
+        CallGetFollowingAPI caller = new CallGetFollowingAPI(this);
         caller.execute(userURL);
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, caller.getFollowing());
         friendList.setAdapter(adapter);
     }
@@ -304,23 +281,25 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     public void addProfile() {
         fab.setVisibility(View.GONE);
         View v = getLayoutInflater().inflate(R.layout.fragment_profile,
                 mLinearLayout);
 
-        TextView[] tv = {(TextView) v.findViewById(R.id.nameView),
-                (TextView)v.findViewById(R.id.genderView),
-                (TextView)v.findViewById(R.id.addressView),
+        TextView[] tv = {
+                (TextView) v.findViewById(R.id.nameView),
+                (TextView) v.findViewById(R.id.genderView),
+                (TextView) v.findViewById(R.id.addressView),
                 (TextView) v.findViewById(R.id.NumOfEvents),
                 (TextView) v.findViewById(R.id.Score),
                 (TextView) v.findViewById(R.id.Friends),
-                (TextView) v.findViewById(R.id.Events)};
+                (TextView) v.findViewById(R.id.Events),
+                (TextView) v.findViewById(R.id.followEdit)};
+        this.profView = v;
         v.findViewById(R.id.followButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attemptFollow(v.findViewById(R.id.followEdit));
+                attemptFollow((EditText) profView.findViewById(R.id.followEdit));
             }
         });
 
@@ -351,8 +330,8 @@ public class MainActivity extends AppCompatActivity
         iv.setImageBitmap(bm);
     }
 
-    private void attemptFollow(View followEdit) {
-        String userFollowURL = apiURL + "/FollowServlet?owner_id=" + currentUser + "&following_id="+ followEdit.toString();
+    private void attemptFollow(EditText followEdit) {
+        String userFollowURL = apiURL + "/FollowServlet?owner_id=" + currentUser + "&following_id="+ followEdit.getText();
         new CallFollowAPI(this).execute(userFollowURL);
     }
 }
