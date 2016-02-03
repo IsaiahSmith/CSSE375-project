@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
      * Used to store the last screen title. For use in
      */
     private CharSequence mTitle;
-    private LinearLayout mLinearLayout;
+    public LinearLayout mLinearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity
             STATE = 0;
             mLinearLayout.removeAllViews();
             fab.setVisibility(View.VISIBLE);
-            addFeed();
+            addFeed(mLinearLayout);
 
         } else if (id == R.id.nav_profile) {
             STATE = 1;
@@ -199,8 +199,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void doSearch(){
-        View v = getLayoutInflater().inflate(R.layout.fragment_search,
-                mLinearLayout);
+        mLinearLayout.removeAllViews();
+        View v = getLayoutInflater().inflate(R.layout.fragment_search, mLinearLayout);
         TextView tags = (TextView) v.findViewById(R.id.tagEdit);
 
         String searchURL = apiURL + "/AdvancedSearchServlet";
@@ -213,14 +213,14 @@ public class MainActivity extends AppCompatActivity
         ListView friendList = (ListView) findViewById(R.id.list_view_friend);
 
         String userURL = apiURL + "/GetUserServlet?_id=" + currentUser;
-        CallGetFollowingAPI caller = new CallGetFollowingAPI(this);
+        ArrayAdapter<String> adapter = null;
+        CallGetFollowingAPI caller = new CallGetFollowingAPI(this, adapter, friendList);
         caller.execute(userURL);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, caller.getFollowing());
         friendList.setAdapter(adapter);
     }
 
-    public void addFeed() {
+    public void addFeed(LinearLayout mLinearLayout) {
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
 
@@ -239,7 +239,6 @@ public class MainActivity extends AppCompatActivity
                 public void onClick(View v) {
                     ACTIVE_EVENT = x;
                     openEvent();
-
                 }
             });
 
@@ -333,5 +332,9 @@ public class MainActivity extends AppCompatActivity
     private void attemptFollow(EditText followEdit) {
         String userFollowURL = apiURL + "/FollowServlet?owner_id=" + currentUser + "&following_id="+ followEdit.getText();
         new CallFollowAPI(this).execute(userFollowURL);
+    }
+
+    public LinkedList<dummyEvent> getEvents(){
+        return events;
     }
 }

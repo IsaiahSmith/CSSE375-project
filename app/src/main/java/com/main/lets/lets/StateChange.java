@@ -16,11 +16,11 @@ public class StateChange {
 
     public void changeState(int state, LinearLayout mLinearLayout){
         if(state == 0){
-            this.app.addFeed();
+            this.app.addFeed(this.app.mLinearLayout);
         }else if(state == 1){
             this.app.addProfile();
         }else{
-            this.app.addFeed();
+            this.app.addFeed(this.app.mLinearLayout);
             Snackbar.make(mLinearLayout, "Event hidden", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }

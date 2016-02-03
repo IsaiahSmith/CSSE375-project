@@ -5,7 +5,7 @@
     <ListView
         android:id="@+id/list_view_friend"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         />
 
 </LinearLayout><!-- From: file:/C:/Users/smithij/Documents/CSSE/375/CSSE375-project/app/src/main/res/layout/fragment_friends.xml -->

@@ -1,8 +1,10 @@
 package APICalls;
 
-import android.app.Activity;
 import android.view.View;
+import android.widget.LinearLayout;
 
+import com.main.lets.lets.MainActivity;
+import com.main.lets.lets.R;
 import com.main.lets.lets.dummyEvent;
 
 import org.json.JSONArray;
@@ -18,28 +20,27 @@ import java.sql.Time;
  */
 public class CallSearchAPI extends CallAPI {
     private final View view;
-    private Activity app;
+    private MainActivity app;
 
-    public CallSearchAPI(Activity app, View v){
+    public CallSearchAPI(MainActivity app, View v){
         this.app = app;
         this.view = v;
     }
+
     protected void onPostExecute(String result) {
 
         try {
             String splitter = "@@@@@";
-
             String[] eventsList = result.split(splitter);
 
             for(String e : eventsList){
-
                 dummyEvent dum = new dummyEvent();
                 JSONObject event = new JSONObject(e);
 
                 dum.setTitle(event.get("title").toString());
 
-
                 dum.setDescription(event.get("description").toString());
+
                 dum.setMaxA(10);
 
                 dum.setStartTime(new Time(2, 0, 0));
@@ -49,14 +50,14 @@ public class CallSearchAPI extends CallAPI {
                 JSONArray coorPoint = coor.getJSONArray("coordinates");
                 dum.setCoords(coorPoint.getInt(0), coorPoint.getInt(1));
 
-
-
                 dum.setDate(new Date(2015, 11, 20));
-
+                this.app.getEvents().add(dum);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        LinearLayout eventLayout = (LinearLayout) this.app.findViewById(R.id.eventLayout);
+        this.app.addFeed(eventLayout);
     }
 
 }

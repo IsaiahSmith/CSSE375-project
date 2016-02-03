@@ -1,11 +1,11 @@
 package APICalls;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
 import com.main.lets.lets.RegisterActivity;
+import com.main.lets.lets.SignInActivity;
 
 /**
  * Created by rajaa on 1/13/2016.
@@ -13,17 +13,13 @@ import com.main.lets.lets.RegisterActivity;
 public class CallRegisterAPI extends CallAPI {
     public Context appContext;
     public Context baseContext;
-    public Activity registerActivity;
+    public RegisterActivity registerActivity;
 
-    public CallRegisterAPI(Activity registerActivity){
+    public CallRegisterAPI(RegisterActivity registerActivity){
         this.appContext = registerActivity.getApplicationContext();
         this.baseContext = registerActivity.getBaseContext();
 
     }
-
-
-
-
 
     protected void onPostExecute(String result) {
         if(result.equals("false")){
@@ -34,6 +30,7 @@ public class CallRegisterAPI extends CallAPI {
                     Toast.LENGTH_LONG).show();
 
             Intent intent = registerActivity.getIntent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             registerActivity.finish();
             appContext.startActivity(intent);
         }else if(result.equals("true")){
@@ -41,16 +38,18 @@ public class CallRegisterAPI extends CallAPI {
                     this.baseContext,
                     "Thanks for joining Let's!",
                     Toast.LENGTH_LONG).show();
-            Intent mainPage = new Intent(this.appContext, RegisterActivity.class);
+            Intent signinPage = new Intent(this.appContext, SignInActivity.class);
+            signinPage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                mainPage.putExtra(LOG_IN_USER,userEmailExtra.toString());
             // mainPage.putExtra(FROM_REGISTER, "true");
-            appContext.startActivity(mainPage);
+            appContext.startActivity(signinPage);
         }else{
             Toast.makeText(
                     this.baseContext,
                     result,
                     Toast.LENGTH_LONG).show();
             Intent intent = registerActivity.getIntent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             registerActivity.finish();
             appContext.startActivity(intent);
         }
